@@ -12,8 +12,7 @@ class BackButtonInterceptor with WidgetsBindingObserver {
   @visibleForTesting
   static final BackButtonInterceptor instance = BackButtonInterceptor._();
 
-  static final SplayTreeMap<double, List<BoolCallback>> _prioritizedCallbacks =
-      SplayTreeMap();
+  static final SplayTreeMap<double, List<BoolCallback>> _prioritizedCallbacks = SplayTreeMap();
 
   static void add(BoolCallback callback, {int? priority}) {
     if (_prioritizedCallbacks.isEmpty) {
@@ -23,17 +22,14 @@ class BackButtonInterceptor with WidgetsBindingObserver {
     if (callbacksList == null) {
       // Convert to double so that we have a valid maximum value to sort null
       // priorities last.
-      _prioritizedCallbacks[priority?.toDouble() ?? double.infinity] = [
-        callback
-      ];
+      _prioritizedCallbacks[priority?.toDouble() ?? double.infinity] = [callback];
       return;
     }
     callbacksList.add(callback);
   }
 
   static void remove(BoolCallback callback) {
-    _prioritizedCallbacks.values
-        .any((callbackList) => callbackList.remove(callback));
+    _prioritizedCallbacks.values.any((callbackList) => callbackList.remove(callback));
     _prioritizedCallbacks.removeWhere((key, value) => value.isEmpty);
     if (_prioritizedCallbacks.isEmpty) {
       _unMount();
@@ -41,16 +37,15 @@ class BackButtonInterceptor with WidgetsBindingObserver {
   }
 
   static void _mount() {
-    WidgetsBinding.instance!.addObserver(instance);
+    WidgetsBinding.instance.addObserver(instance);
   }
 
   static void _unMount() {
     _prioritizedCallbacks.clear();
-    WidgetsBinding.instance!.removeObserver(instance);
+    WidgetsBinding.instance.removeObserver(instance);
   }
 
-  Iterable<BoolCallback> get _callbacks =>
-      _prioritizedCallbacks.values.expand((lst) => lst);
+  Iterable<BoolCallback> get _callbacks => _prioritizedCallbacks.values.expand((lst) => lst);
 
   @override
   Future<bool> didPopRoute() async {
